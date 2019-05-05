@@ -4,9 +4,7 @@ framework:
     #csrf_protection: true
     #http_method_override: true
     # config/packages/framework.yaml
-    validation: { enable_annotations: true }
-
-
+    validation: { enabled: true, enable_annotations: true }
 
     templating:
         engines: ['twig', 'php']

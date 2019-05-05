@@ -14,6 +14,9 @@ use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadataFactory as DoctrineMetadataFactory;
 
+/**
+ * Class ModelConverter.
+ */
 class ModelConverter
 {
     const FORMAT = 'json';
@@ -128,5 +131,29 @@ class ModelConverter
         );
 
         return $data;
+    }
+
+    /**
+     * @param $object
+     *
+     * @return array
+     *
+     * @throws \Doctrine\Common\Persistence\Mapping\MappingException
+     * @throws \ReflectionException
+     */
+    protected function filterDateTimeFields($object): array
+    {
+        $dateFields = [];
+        $classMetaData = $this->ormMetadataFactory->getMetadataFor(get_class($object));
+        $classFields = $classMetaData->getFieldNames();
+
+        foreach ($classFields as $field) {
+            $fieldType = $classMetaData->getTypeOfField($field);
+            if (in_array($fieldType, self::DATE_FORMATS)) {
+                $dateFields[] = $field;
+            }
+        }
+
+        return $dateFields;
     }
 }

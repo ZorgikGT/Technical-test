@@ -24,4 +24,11 @@ class NewsManager
 
         return $news;
     }
+
+    public function pushNews($news)
+    {
+        $this->emi->persist($news);
+        $this->emi->flush();
+        $this->emi->clear();
+    }
 }

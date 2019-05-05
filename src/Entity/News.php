@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Form\FormTypeInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\JoinColumn;
@@ -16,25 +18,48 @@ class News
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"news"})
      */
     private $id;
 
     /**
+     * @Assert\NotBlank
+     * @Assert\Type(
+     *     type="string",
+     *     message="The value {{ value }} is not a valid {{ type }}."
+     * )
+     *
      * @ORM\Column(type="string", length=255)
+     * @Groups({"news"})
      */
     private $title;
 
     /**
+     * @Assert\NotBlank
+     * @Assert\Type(
+     *     type="string",
+     *     message="The value {{ value }} is not a valid {{ type }}."
+     * )
+     *
      * @ORM\Column(type="string", length=255)
+     * @Groups({"news"})
      */
     private $description;
 
     /**
+     * @Assert\DateTime
+     *
      * @ORM\Column(type="datetime")
+     * @Groups({"news"})
      */
     private $createdAt;
 
     /**
+     * @Assert\Type(
+     *     type="integer",
+     *     message="The value {{ value }} is not a valid {{ type }}."
+     * )
+     *
      * @ManyToOne(targetEntity="User", inversedBy="news")
      * @JoinColumn(name="user_id", referencedColumnName="id")
      */
