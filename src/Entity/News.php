@@ -22,44 +22,44 @@ class News
      */
     private $id;
 
+//* @Assert\NotBlank
+//* @Assert\Type(
+//*     type="string",
+//*     message="The value {{ value }} is not a valid {{ type }}."
+//* )
+//*
     /**
-     * @Assert\NotBlank
-     * @Assert\Type(
-     *     type="string",
-     *     message="The value {{ value }} is not a valid {{ type }}."
-     * )
-     *
      * @ORM\Column(type="string", length=255)
      * @Groups({"news"})
      */
     private $title;
 
+
+//* @Assert\NotBlank
+//* @Assert\Type(
+//*     type="string",
+//*     message="The value {{ value }} is not a valid {{ type }}."
+//* )
+//*
     /**
-     * @Assert\NotBlank
-     * @Assert\Type(
-     *     type="string",
-     *     message="The value {{ value }} is not a valid {{ type }}."
-     * )
-     *
      * @ORM\Column(type="string", length=255)
      * @Groups({"news"})
      */
     private $description;
 
+//* @Assert\DateTime
+//*
+
     /**
-     * @Assert\DateTime
-     *
      * @ORM\Column(type="datetime")
      * @Groups({"news"})
      */
     private $createdAt;
 
+//* @Assert\DateTime
+//*
+
     /**
-     * @Assert\Type(
-     *     type="integer",
-     *     message="The value {{ value }} is not a valid {{ type }}."
-     * )
-     *
      * @ManyToOne(targetEntity="User", inversedBy="news")
      * @JoinColumn(name="user_id", referencedColumnName="id")
      */
