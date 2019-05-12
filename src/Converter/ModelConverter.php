@@ -48,21 +48,19 @@ class ModelConverter
 
     const DATE_FORMATS = [
         Type::DATETIME,
-        Type::TIME,
-        Type::DATE
     ];
 
     /**
      * ModelConverter constructor.
      *
-     * @param EntityManagerInterface $em
+     * @param EntityManagerInterface $emi
      *
      * @throws \Doctrine\Common\Annotations\AnnotationException
      */
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $emi)
     {
         $this->ormMetadataFactory = new DoctrineMetadataFactory();
-        $this->ormMetadataFactory->setEntityManager($em);
+        $this->ormMetadataFactory->setEntityManager($emi);
         $this->classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
         $this->objectNormalizer = new ObjectNormalizer($this->classMetadataFactory);
         $this->getSetNormalizer = new GetSetMethodNormalizer($this->classMetadataFactory);

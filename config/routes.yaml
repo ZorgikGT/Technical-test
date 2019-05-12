@@ -11,8 +11,10 @@ _profiler:
 
 user:
   type:     rest
+  prefix:   /api
   resource: App\Controller\UserController
 
 news:
   type:     rest
+  prefix:   /api
   resource: App\Controller\NewsController

@@ -3,11 +3,13 @@
 namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use PhpParser\Node\Expr\Cast\Object_;
 use Symfony\Component\Form\FormTypeInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\JoinColumn;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\NewsRepository")
@@ -22,52 +24,50 @@ class News
      */
     private $id;
 
-//* @Assert\NotBlank
-//* @Assert\Type(
-//*     type="string",
-//*     message="The value {{ value }} is not a valid {{ type }}."
-//* )
-//*
     /**
+     * @Assert\NotBlank
+     * @Assert\Type(
+     *     type="string",
+     *     message="The value {{ value }} is not a valid {{ type }}."
+     * )
      * @ORM\Column(type="string", length=255)
      * @Groups({"news"})
      */
     private $title;
 
-
-//* @Assert\NotBlank
-//* @Assert\Type(
-//*     type="string",
-//*     message="The value {{ value }} is not a valid {{ type }}."
-//* )
-//*
     /**
+     * @Assert\NotBlank
+     * @Assert\Type(
+     *     type="string",
+     *     message="The value {{ value }} is not a valid {{ type }}."
+     * )
      * @ORM\Column(type="string", length=255)
      * @Groups({"news"})
      */
     private $description;
 
-//* @Assert\DateTime
-//*
-
     /**
+     * @Assert\DateTime
+     * @Assert\NotBlank
      * @ORM\Column(type="datetime")
-     * @Groups({"news"})
      */
     private $createdAt;
 
-//* @Assert\DateTime
-//*
-
     /**
+     * @Assert\NotBlank
      * @ManyToOne(targetEntity="User", inversedBy="news")
      * @JoinColumn(name="user_id", referencedColumnName="id")
+     * @Groups({"news"})
      */
     private $createdBy;
 
+    /**
+     * News constructor.
+     * @throws \Exception
+     */
     public function __construct()
     {
-        $this->createdBy = new ArrayCollection();
+        $this->createdAt = new \DateTime();
     }
 
     /**
@@ -125,20 +125,32 @@ class News
     }
 
     /**
-     * @param \DateTime $createdAt
      * @return News
+     * @throws \Exception
      */
-    public function setCreatedAt(\DateTime $createdAt): self
+    public function setCreatedAt(): self
     {
-        $this->createdAt = $createdAt;
+        $this->createdAt = new \DateTime();
+
         return $this;
     }
 
     /**
-     * @return ArrayCollection
+     * @return User
      */
-    public function getCreatedBy(): ArrayCollection
+    public function getCreatedBy(): User
     {
         return $this->createdBy;
+    }
+
+    /**
+     * @param $user
+     * @return News
+     */
+    public function setCreatedBy($user): self
+    {
+        $this->createdBy = $user;
+
+        return $this;
     }
 }
