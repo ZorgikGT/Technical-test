@@ -11,8 +11,9 @@ use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Routing\ClassResourceInterface;
-use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use FOS\RestBundle\Controller\Annotations as Rest;
+use Swagger\Annotations as SWG;
 
 /**
  * @Rest\RouteResource(
@@ -71,6 +72,34 @@ class NewsController extends AbstractFOSRestController implements ClassResourceI
     }
 
     /**
+     * Create news.
+     *
+     * Create news by 3 fields: title, description, createdBy(author username)
+     *
+     * @SWG\Response(
+     *     response=200,
+     *     description="Returns the message and status code."
+     * )
+     * @SWG\Parameter(
+     *     name="title",
+     *     in="query",
+     *     type="string",
+     *     description="The field used to set title."
+     * )
+     * @SWG\Parameter(
+     *     name="description",
+     *     in="query",
+     *     type="string",
+     *     description="The field used to set description."
+     * )
+     * @SWG\Parameter(
+     *     name="createdBy",
+     *     in="query",
+     *     type="string",
+     *     description="The field used to set author."
+     * )
+     * @SWG\Tag(name="news")
+     *
      * @param Request $request
      * @return JsonResponse
      */
@@ -102,6 +131,22 @@ class NewsController extends AbstractFOSRestController implements ClassResourceI
     }
 
     /**
+     * Get news by id.
+     *
+     * Return news by unique identifier.
+     *
+     * @SWG\Response(
+     *     response=200,
+     *     description="Returns the news."
+     * )
+     * @SWG\Parameter(
+     *     name="id",
+     *     in="query",
+     *     type="integer",
+     *     description="The field used to get news."
+     * )
+     * @SWG\Tag(name="news")
+     *
      * @param int $id
      * @return JsonResponse
      * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
@@ -132,12 +177,33 @@ class NewsController extends AbstractFOSRestController implements ClassResourceI
     }
 
     /**
+     * Return paginate list of news.
+     *
+     * Return paginate list of news with fields: id, title, release date.
+     *
+     * @SWG\Response(
+     *     response=200,
+     *     description="Render paginate list of news."
+     * )
+     * @SWG\Parameter(
+     *     name="page number",
+     *     in="query",
+     *     type="integer",
+     *     description="The field used to get page"
+     * )
+     * @SWG\Tag(name="news")
+     *
      * @return JsonResponse|\Symfony\Component\HttpFoundation\Response
      */
     public function cgetAction()
     {
+        $pageNumber = 1;
         try {
             $news = $this->newsManager->getAllNews();
+
+            if(!empty($_GET['page'])) {
+                $pageNumber = $_GET['page'];
+            }
         }catch (\Exception $e) {
 
             return new JsonResponse(['message' => $e->getMessage()],JsonResponse::HTTP_BAD_REQUEST);
@@ -145,7 +211,7 @@ class NewsController extends AbstractFOSRestController implements ClassResourceI
 
         $pagination = $this->paginator->paginate(
             $news,
-            1,
+            $pageNumber,
             5
         );
 
@@ -153,23 +219,34 @@ class NewsController extends AbstractFOSRestController implements ClassResourceI
     }
 
     /**
-     * @param int $id
-     * @return JsonResponse
-     */
-    public function deleteAction(int $id)
-    {
-        try {
-            $news = $this->newsManager->getNewsById($id);
-            $this->newsManager->deleteNews($news);
-        } catch (\Exception $e) {
-
-            return new JsonResponse(['message' => $e->getMessage()],JsonResponse::HTTP_BAD_REQUEST);
-        }
-
-        return new JsonResponse(['message' => 'deleted'], JsonResponse::HTTP_OK);
-    }
-
-    /**
+     * Update of news
+     *
+     * Update of news. Return the status code
+     *
+     * @SWG\Response(
+     *     response=200,
+     *     description="Returns the message and status code."
+     * )
+     * @SWG\Parameter(
+     *     name="id",
+     *     in="query",
+     *     type="integer",
+     *     description="The field used to get news."
+     * )
+     * @SWG\Parameter(
+     *     name="title",
+     *     in="query",
+     *     type="string",
+     *     description="The field used to update title."
+     * )
+     * @SWG\Parameter(
+     *     name="description",
+     *     in="query",
+     *     type="string",
+     *     description="The field used to update description."
+     * )
+     * @SWG\Tag(name="news")
+     *
      * @param Request $request
      * @param int $id
      * @return JsonResponse
@@ -209,5 +286,39 @@ class NewsController extends AbstractFOSRestController implements ClassResourceI
         $this->newsManager->addNews($news);
 
         return new JsonResponse(['message' => 'updated'], JsonResponse::HTTP_OK);
+    }
+
+    /**
+     * Delete the news.
+     *
+     * Delete the news. Return the status code.
+     *
+     * @SWG\Response(
+     *     response=200,
+     *     description="Returns the message and status code."
+     * )
+     * @SWG\Parameter(
+     *     name="id",
+     *     in="query",
+     *     type="integer",
+     *     description="The field used to delete news."
+     * )
+     *
+     * @SWG\Tag(name="news")
+     *
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function deleteAction(int $id)
+    {
+        try {
+            $news = $this->newsManager->getNewsById($id);
+            $this->newsManager->deleteNews($news);
+        } catch (\Exception $e) {
+
+            return new JsonResponse(['message' => $e->getMessage()],JsonResponse::HTTP_BAD_REQUEST);
+        }
+
+        return new JsonResponse(['message' => 'deleted'], JsonResponse::HTTP_OK);
     }
 }

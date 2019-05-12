@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Symfony\Component\Validator\Constraints as Assert;
+use Swagger\Annotations as SWG;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\NewsRepository")
@@ -17,6 +18,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 class News
 {
     /**
+     * @var int
+     * @SWG\Property(description="The unique identifier of the news.")
+     *
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
@@ -25,6 +29,9 @@ class News
     private $id;
 
     /**
+     * @var string
+     * @SWG\Property(description="The title.")
+     *
      * @Assert\NotBlank
      * @Assert\Type(
      *     type="string",
@@ -36,6 +43,9 @@ class News
     private $title;
 
     /**
+     * @var string
+     * @SWG\Property(description="The description.")
+     *
      * @Assert\NotBlank
      * @Assert\Type(
      *     type="string",
@@ -47,6 +57,9 @@ class News
     private $description;
 
     /**
+     * @var \DateTime
+     * @SWG\Property(description="The datetime of the release.")
+     *
      * @Assert\DateTime
      * @Assert\NotBlank
      * @ORM\Column(type="datetime")
