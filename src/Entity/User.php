@@ -28,7 +28,7 @@ class User extends BaseUser
     protected $id;
 
     /**
-     * @ORM\OneToMany(targetEntity="News", mappedBy="createdBy", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="News", mappedBy="createdBy", cascade={"persist"}, cascade={"remove"})
      * @Assert\Type("object")
      */
     private $news;
